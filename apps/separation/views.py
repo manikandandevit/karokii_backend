@@ -37,6 +37,7 @@ class HealthView(APIView):
 
 #         return Response(SeparationJobSerializer(job).data, status=status.HTTP_201_CREATED)
 
+base_url = "https://karokii-backend.onrender.com"  
 class CreateJobView(APIView):
     def post(self, request):
         serializer = CreateJobSerializer(data=request.data)
