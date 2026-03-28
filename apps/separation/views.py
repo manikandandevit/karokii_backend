@@ -15,28 +15,49 @@ class HealthView(APIView):
         return Response({"ok": True})
 
 
+# class CreateJobView(APIView):
+#     def post(self, request):
+#         serializer = CreateJobSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+
+#         upload = serializer.validated_data["file"]
+#         job = SeparationJob.objects.create(source_file=upload, status=SeparationJob.Status.PROCESSING)
+
+#         try:
+#             source_path = Path(job.source_file.path)
+#             output_dir = get_output_root() / str(job.id)
+#             result_dir = run_demucs(source_path, output_dir)
+#             job.status = SeparationJob.Status.COMPLETED
+#             job.metadata = {"output_dir": str(result_dir)}
+#             job.save(update_fields=["status", "metadata", "updated_at"])
+#         except Exception as exc:  # pragma: no cover
+#             job.status = SeparationJob.Status.FAILED
+#             job.error_message = str(exc)
+#             job.save(update_fields=["status", "error_message", "updated_at"])
+
+#         return Response(SeparationJobSerializer(job).data, status=status.HTTP_201_CREATED)
+
 class CreateJobView(APIView):
     def post(self, request):
         serializer = CreateJobSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         upload = serializer.validated_data["file"]
-        job = SeparationJob.objects.create(source_file=upload, status=SeparationJob.Status.PROCESSING)
+        job = SeparationJob.objects.create(
+            source_file=upload,
+            status=SeparationJob.Status.PROCESSING
+        )
 
-        try:
-            source_path = Path(job.source_file.path)
-            output_dir = get_output_root() / str(job.id)
-            result_dir = run_demucs(source_path, output_dir)
-            job.status = SeparationJob.Status.COMPLETED
-            job.metadata = {"output_dir": str(result_dir)}
-            job.save(update_fields=["status", "metadata", "updated_at"])
-        except Exception as exc:  # pragma: no cover
-            job.status = SeparationJob.Status.FAILED
-            job.error_message = str(exc)
-            job.save(update_fields=["status", "error_message", "updated_at"])
+        # 🚀 DEMO MODE (skip demucs)
+        job.status = SeparationJob.Status.COMPLETED
+        job.metadata = {"output_dir": "demo/path"}
+        job.save(update_fields=["status", "metadata", "updated_at"])
 
-        return Response(SeparationJobSerializer(job).data, status=status.HTTP_201_CREATED)
-
+        return Response({
+            "id": str(job.id),
+            "status": "completed",
+            "message": "Demo mode - processing skipped"
+        }, status=status.HTTP_201_CREATED)
 
 class JobDetailView(APIView):
     def get(self, request, job_id):
