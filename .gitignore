@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# virtualenvs
+.venv/
+venv/
+env/
+
+# env files
+.env
+.env.*
+
+# Django / runtime
+media/
+staticfiles/
+db.sqlite3
+*.log
+
+# tests / typecheck
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
