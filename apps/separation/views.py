@@ -37,7 +37,43 @@ class HealthView(APIView):
 
 #         return Response(SeparationJobSerializer(job).data, status=status.HTTP_201_CREATED)
 
-base_url = "https://karokii-backend.onrender.com"  
+# base_url = "https://karokii-backend.onrender.com"  
+# class CreateJobView(APIView):
+#     def post(self, request):
+#         serializer = CreateJobSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+
+#         upload = serializer.validated_data["file"]
+#         job = SeparationJob.objects.create(
+#             source_file=upload,
+#             status=SeparationJob.Status.PROCESSING
+#         )
+
+#         # 🚀 DEMO MODE (skip demucs)
+#         job.status = SeparationJob.Status.COMPLETED
+#         job.metadata = {
+#                 "files": {
+#         "vocals": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/vocals.mp3",
+#         "drums": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/drums.mp3",
+#         "bass": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/bass.mp3",
+#         "other": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/other.mp3"
+#     }
+            
+#             # "output_dir": "demo/path"
+        
+#         }
+#         job.save(update_fields=["status", "metadata", "updated_at"])
+
+#         return Response({
+#             "id": str(job.id),
+#             "status": "completed",
+#             "message": "Demo mode - processing skipped"
+#         }, status=status.HTTP_201_CREATED)
+
+
+
+base_url = "https://karokii-backend.onrender.com"
+
 class CreateJobView(APIView):
     def post(self, request):
         serializer = CreateJobSerializer(data=request.data)
@@ -49,26 +85,20 @@ class CreateJobView(APIView):
             status=SeparationJob.Status.PROCESSING
         )
 
-        # 🚀 DEMO MODE (skip demucs)
         job.status = SeparationJob.Status.COMPLETED
         job.metadata = {
-                "files": {
-        "vocals": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/vocals.mp3",
-        "drums": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/drums.mp3",
-        "bass": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/bass.mp3",
-        "other": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/other.mp3"
-    }
-            
-            # "output_dir": "demo/path"
-        
+            "output_dir": "D:/Karaoke/backend/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB",
+            "files": {
+                "vocals": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/vocals.mp3",
+                "drums": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/drums.mp3",
+                "bass": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/bass.mp3",
+                "other": f"{base_url}/media/outputs/4bc926d7-0bb1-4329-8fd3-09cb7d1f0aba/htdemucs/Nee_Singam_Dhan_Song_Download_Pagalworld_Mp3_koDaLZB/other.mp3"
+            }
         }
+
         job.save(update_fields=["status", "metadata", "updated_at"])
 
-        return Response({
-            "id": str(job.id),
-            "status": "completed",
-            "message": "Demo mode - processing skipped"
-        }, status=status.HTTP_201_CREATED)
+        return Response(SeparationJobSerializer(job).data)
 
 class JobDetailView(APIView):
     def get(self, request, job_id):
